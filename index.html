@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>eGain Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="chatbox">
+    <div class="header">🤖 eGain Support</div>
+    <div class="messages" id="chat"></div>
+
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Type here..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+let step = "menu";
+let trackingId = "";
+
+function addMessage(msg, type) {
+    let div = document.createElement("div");
+    div.className = type;
+    div.innerText = msg;
+    document.getElementById("chat").appendChild(div);
+    document.getElementById("chat").scrollTop = chat.scrollHeight;
+}
+
+function showMenu() {
+    addMessage("Hello! 👋 Welcome to eGain Support", "bot");
+    addMessage("Press 1 to track your package", "bot");
+    addMessage("Press 2 to exit", "bot");
+    step = "menu";
+}
+
+async function sendMessage() {
+    let input = document.getElementById("input");
+    let text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    if (step === "menu") {
+        if (text === "1") {
+            addMessage("Enter tracking ID (Example: ABCD123)", "bot");
+            step = "tracking";
+        } 
+        else if (text === "2") {
+            addMessage("👋 Thank you for using eGain Support. Goodbye!", "bot");
+            input.disabled = true;
+            step = "exit";
+        }
+        else {
+            addMessage("❗ Please enter a valid option (1 or 2)", "bot");
+        }
+    }
+
+    else if (step === "tracking") {
+        trackingId = text;
+
+        let res = await fetch("/track", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({tracking_id: text})
+        });
+
+        let data = await res.json();
+
+        if (data.status === "invalid") {
+            addMessage("❗ Invalid tracking ID.", "bot");
+            addMessage("Format should be: ABCD123", "bot");
+            return;
+        }
+
+        if (data.status === "delivered") {
+            addMessage("✅ Your order has been delivered successfully.", "bot");
+            showMenu();
+        }
+
+        else if (data.status === "transit") {
+            addMessage("🚚 Your order is IN TRANSIT.", "bot");
+            addMessage("📦 Picked from warehouse and shipped.", "bot");
+            addMessage("👤 Delivery Agent: " + data.agent.name, "bot");
+            addMessage("📞 Contact: " + data.agent.phone, "bot");
+            showMenu();
+        }
+
+        else {
+            addMessage("❌ Your order appears to be LOST.", "bot");
+            addMessage("Please re-enter the SAME tracking ID to raise a complaint.", "bot");
+            step = "complaint";
+        }
+    }
+
+    else if (step === "complaint") {
+        let res = await fetch("/complaint", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                tracking_id: trackingId,
+                confirm_id: text
+            })
+        });
+
+        let data = await res.json();
+
+        if (data.status === "mismatch") {
+            addMessage("❗ Tracking ID does not match.", "bot");
+        } else {
+            addMessage("📩 Complaint registered successfully.", "bot");
+            addMessage("📞 You will receive a callback within 24 hours.", "bot");
+            trackingId = "";
+            showMenu();
+        }
+    }
+}
+
+showMenu();
+</script>
+
+</body>
+</html>
