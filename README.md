@@ -89,12 +89,15 @@ This project is a simple chatbot system that allows users to track packages and 
 
 ### CLI Output
 
-<img width="1353" height="719" alt="image" src="https://github.com/user-attachments/assets/67e31989-a2f9-450a-975f-1529b663d34b" />
-
+<img width="1353" height="719" alt="image" src="https://github.com/user-attachments/assets/67e31989-a2f9-450a-975f-1529b663d34b" />  
 
 ### Web Interface
 
-<img width="1920" height="961" alt="image" src="https://github.com/user-attachments/assets/7eaaa938-aebd-45f9-b4a9-109a3e9a9034" />
+<img width="1920" height="961" alt="image" src="https://github.com/user-attachments/assets/7eaaa938-aebd-45f9-b4a9-109a3e9a9034" /> <img width="605" height="702" alt="image" src="https://github.com/user-attachments/assets/8ce989ae-4cbc-45e9-9f1c-d0fc0532ba28" />
+<img width="605" height="708" alt="image" src="https://github.com/user-attachments/assets/574732f4-e019-45bc-bf37-6e8bdd490889" />
+<img width="612" height="715" alt="image" src="https://github.com/user-attachments/assets/36bb2ae3-d3d7-4fca-9f57-31de9fa87473" />
+<img width="610" height="702" alt="image" src="https://github.com/user-attachments/assets/eb7f4e88-ee8b-4071-8f8b-5eb3ecf02d53" />
+
 
 ## 🔮 Future Improvements
 
